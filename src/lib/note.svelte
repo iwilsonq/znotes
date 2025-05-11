@@ -1,6 +1,7 @@
 <script lang="ts">
     import { Pencil, Trash } from "@lucide/svelte";
     import type { NoteWithTags } from "./types";
+    import TagToken from "./tag-token.svelte";
 
     let { note }: { note: NoteWithTags } = $props();
 </script>
@@ -32,7 +33,7 @@
         <footer class="flex justify-between">
             <div class="flex">
                 {#each note.tags as tag}
-                    <span class="badge preset-filled mr-1">{tag.name}</span>
+                    <TagToken name={tag.name} />
                 {/each}
             </div>
 

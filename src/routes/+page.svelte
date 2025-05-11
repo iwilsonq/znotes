@@ -14,15 +14,22 @@
 </script>
 
 <main>
-    <section>
+    <section class="flex justify-center mb-8 gap-4">
+        <a class="btn preset-filled-primary-500" href="/notes"
+            >Create New Note</a
+        >
+        <button class="btn preset-tonal-primary">Explore Notes</button>
+    </section>
+
+    <section class="mb-8">
         <h2 class="h2 mb-4">Recent Notes</h2>
         <div class="grid grid-cols-3 gap-4">
             <Notes notes={data.notes} />
         </div>
     </section>
 
-    <section class="tag-cloud">
-        <h2>Tags</h2>
+    <section class="mb-8">
+        <h2 class="h2 mb-4">Tags</h2>
         <ul class="flex flex-wrap gap-1">
             {#each data.tags as tag}
                 <li><TagToken name={tag.name} /></li>
@@ -40,13 +47,6 @@
             </li>
         </ul>
     </section>
-
-    <div class="">
-        <a class="btn preset-filled-primary-500" href="/notes"
-            >Create New Note</a
-        >
-        <button class="btn preset-tonal-primary">Explore Notes</button>
-    </div>
 </main>
 
 <footer>
