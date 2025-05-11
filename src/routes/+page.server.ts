@@ -4,8 +4,11 @@ import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ params }) => {
   const notes: Note[] = db
-    .prepare(`SELECT * FROM notes ORDER BY created_at DESC LIMIT 4`)
-    .all() as Note[];
+    .prepare<
+      unknown[],
+      Note
+    >(`SELECT * FROM notes ORDER BY created_at DESC LIMIT 3`)
+    .all();
 
   const getTagsForNote = db.prepare(`
       SELECT tags.id, tags.name
@@ -19,7 +22,15 @@ export const load: PageServerLoad = async ({ params }) => {
     return { ...note, tags };
   }) as NoteWithTags[];
 
+  const tags = db
+    .prepare<unknown[], Tag[]>(
+      `
+    SELECT id, name from tags`,
+    )
+    .all();
+
   return {
     notes: notesWithTags,
+    tags,
   };
 };

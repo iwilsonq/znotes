@@ -1,7 +1,16 @@
 <script lang="ts">
     import Notes from "$lib/notes.svelte";
+    import TagToken from "$lib/tag-token.svelte";
+    import type { Note, Tag } from "$lib/types";
 
-    let { data }: PageProps = $props();
+    interface Props {
+        data: {
+            notes: Note[];
+            tags: Tag[];
+        };
+    }
+
+    let { data }: Props = $props();
 </script>
 
 <main>
@@ -13,11 +22,11 @@
     </section>
 
     <section class="tag-cloud">
-        <h2>Popular Tags</h2>
-        <ul>
-            <!-- Tag cloud or list goes here -->
-            <li><a href="/tags/tag1">#tag1</a></li>
-            <li><a href="/tags/tag2">#tag2</a></li>
+        <h2>Tags</h2>
+        <ul class="flex flex-wrap gap-1">
+            {#each data.tags as tag}
+                <li><TagToken name={tag.name} /></li>
+            {/each}
         </ul>
     </section>
 
