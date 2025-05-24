@@ -9,7 +9,7 @@
 <div class="container mx-auto">
     <div class="flex justify-center">
         <form
-            class="card preset-tonal-surface border-[1px] border-surface-200-800 w-full max-w-md mb-4 p-4 flex flex-col"
+            class="card preset-tonal-surface border-[1px] border-surface-200-800 w-full max-w-2xl mb-4 p-4 flex flex-col"
             method="POST"
             action="?/update"
         >
@@ -31,7 +31,7 @@
                         class="textarea"
                         id="content"
                         name="content"
-                        rows="5">{data.note.content}</textarea
+                        rows="10">{data.note.content}</textarea
                     >
                 </label>
             </div>

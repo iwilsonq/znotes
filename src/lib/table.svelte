@@ -41,7 +41,11 @@
                 {#each rows as row}
                     <tr>
                         {#each columns as column}
-                            <td>{getCellValue(row, column)}</td>
+                            <td>
+                                <a href="/notes/{row.id}">
+                                    {getCellValue(row, column)}
+                                </a>
+                            </td>
                         {/each}
                     </tr>
                 {/each}

@@ -25,6 +25,7 @@
         <Table
             rows={data.notes}
             columns={[
+                { key: "id", header: "ID" },
                 { key: "title", header: "Title" },
                 { key: "content", header: "Content" },
                 {
