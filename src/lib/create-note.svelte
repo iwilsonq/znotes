@@ -20,7 +20,8 @@
     <div class="mb-4">
         <label class="label" for="content">
             <span class="label-text">Contents</span>
-            <textarea class="textarea" id="content" name="content"></textarea>
+            <textarea class="textarea" id="content" name="content" rows="5"
+            ></textarea>
         </label>
     </div>
     <div class="mb-4">

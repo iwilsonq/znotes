@@ -4,7 +4,7 @@ import { getTags } from "$lib/server/models/tags";
 
 export const load: PageServerLoad = async ({ params }) => {
   return {
-    notes: getNotes(),
+    notes: getNotes(10),
     tags: getTags(),
   };
 };

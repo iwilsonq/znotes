@@ -1,12 +1,12 @@
 import type { Note, NoteWithTags, Tag } from "$lib/types";
 import db from "../database";
 
-export function getNotes() {
+export function getNotes(limit: number = 3) {
   const notes: Note[] = db
     .prepare<
       unknown[],
       Note
-    >(`SELECT * FROM notes ORDER BY created_at DESC LIMIT 3`)
+    >(`SELECT * FROM notes ORDER BY created_at DESC LIMIT ${limit}`)
     .all();
 
   const getTagsForNote = db.prepare(`
