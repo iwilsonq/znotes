@@ -1,4 +1,5 @@
-import { error, fail } from "@sveltejs/kit";
+import { error, fail, redirect } from "@sveltejs/kit";
+
 import type { Actions, PageServerLoad } from "./$types";
 import db from "$lib/server/database";
 import type { Note, NoteWithTags, Tag } from "$lib/types";
@@ -62,11 +63,11 @@ export const actions = {
           ).run(params.id, tagRow.id);
         }
       }
-
-      return { success: true };
     } catch (error) {
       console.error("Failed to update note:", error);
       return fail(500, { message: "Failed to update note" });
     }
+
+    redirect(303, `/notes/${params.id}`);
   },
 } satisfies Actions;

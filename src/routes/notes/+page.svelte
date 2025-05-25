@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { PageProps } from "./$types";
-    import CreateNote from "$lib/create-note.svelte";
+    import NoteForm from "$lib/note-form.svelte";
 </script>
 
 <div class="flex justify-center w-full">
-    <CreateNote />
+    <NoteForm />
 </div>
