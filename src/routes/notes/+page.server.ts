@@ -1,7 +1,7 @@
 import db from "$lib/server/database";
 import type { Note, NoteWithTags, Tag } from "$lib/types";
 import type { Actions, PageServerLoad } from "./$types";
-import { fail } from "@sveltejs/kit";
+import { fail, redirect } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async ({ params }) => {
   const notes: Note[] = db
@@ -85,30 +85,11 @@ export const actions = {
           ).run(noteRow.id, targetNoteId);
         }
       }
-
-      return { success: true };
     } catch (error) {
       console.error("Failed to create note:", error);
       return fail(500, { message: "Failed to create note" });
     }
-  },
-  delete: async ({ request }) => {
-    const data = await request.formData();
-    const noteId = data.get("id");
 
-    try {
-      const changes = db
-        .prepare("DELETE FROM notes WHERE id = ?")
-        .run(noteId).changes;
-
-      console.log("changes", changes);
-
-      if (!changes) {
-        return fail(404, { message: "Note ID not found" });
-      }
-    } catch (error) {
-      console.log("error", error);
-      return fail(500, { message: "Failed to create note" });
-    }
+    redirect(303, `/`);
   },
 } satisfies Actions;

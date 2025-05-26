@@ -1,16 +1,36 @@
 <script lang="ts">
+    import type { Component } from "svelte";
+
     export interface Column<T = any> {
         key: keyof T | ((item: T) => string);
         header: string;
         format?: (value: any) => string;
+        isAction?: boolean;
+    }
+
+    interface Action<T = any> {
+        label: string;
+        url: string | ((item: T) => string);
+        method: "GET" | "POST";
+        icon?: Component;
+        variant?: string;
     }
 
     interface Props<T = any> {
         rows: Array<T>;
         columns: Array<Column<T>>;
+        actions?: Array<Action<T>>;
+        actionColumn?: {
+            header: string;
+        };
     }
 
-    let { rows, columns }: Props = $props();
+    let {
+        rows,
+        columns,
+        actions = [],
+        actionColumn = { header: "Actions" },
+    }: Props = $props();
 
     function getCellValue<T>(row: T, column: Column<T>): string {
         let value;
@@ -21,6 +41,11 @@
         }
 
         return column.format ? column.format(value) : String(value);
+    }
+
+    function handleAction<T>(action: Action<T>, row: T) {
+        if (!action.action) return;
+        action.action(row);
     }
 </script>
 
@@ -35,18 +60,61 @@
                     {#each columns as column}
                         <th>{column.header}</th>
                     {/each}
+                    {#if actions.length > 0}
+                        <th>{actionColumn.header}</th>
+                    {/if}
                 </tr>
             </thead>
-            <tbody class="[&>tr]:hover:preset-tonal-primary">
+            <tbody class="[&>tr]:hover:preset-tonal">
                 {#each rows as row}
                     <tr>
                         {#each columns as column}
                             <td>
-                                <a href="/notes/{row.id}">
-                                    {getCellValue(row, column)}
-                                </a>
+                                {#if !column.isAction}
+                                    <a href="/notes/{row.id}">
+                                        {getCellValue(row, column)}
+                                    </a>
+                                {/if}
                             </td>
                         {/each}
+                        {#if actions.length > 0}
+                            <td class="flex gap-2">
+                                {#each actions as action}
+                                    {#if action.method === "GET"}
+                                        <a
+                                            href={typeof action.url ===
+                                            "function"
+                                                ? action.url(row)
+                                                : action.url}
+                                        >
+                                            {#if action.icon}
+                                                <action.icon size="16" />
+                                            {:else}
+                                                {action.label}
+                                            {/if}
+                                        </a>
+                                    {:else}
+                                        <form
+                                            action={typeof action.url ===
+                                            "function"
+                                                ? action.url(row)
+                                                : action.url}
+                                            method="POST"
+                                        >
+                                            <button
+                                                class={`text-${action.variant}`}
+                                            >
+                                                {#if action.icon}
+                                                    <action.icon size="16" />
+                                                {:else}
+                                                    {action.label}
+                                                {/if}
+                                            </button>
+                                        </form>
+                                    {/if}
+                                {/each}
+                            </td>
+                        {/if}
                     </tr>
                 {/each}
             </tbody>
