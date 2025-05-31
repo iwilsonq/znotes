@@ -42,11 +42,6 @@
 
         return column.format ? column.format(value) : String(value);
     }
-
-    function handleAction<T>(action: Action<T>, row: T) {
-        if (!action.action) return;
-        action.action(row);
-    }
 </script>
 
 <div
