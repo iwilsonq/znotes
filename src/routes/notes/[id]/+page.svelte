@@ -1,16 +1,20 @@
 <script lang="ts">
-    import { read } from "$app/server";
     import type { Note } from "$lib/types.js";
     import { Pencil } from "@lucide/svelte";
     import { marked, Renderer } from "marked";
 
     interface Props {
-        note: Note;
+        data: {
+            note: Note;
+        };
     }
 
-    let { data } = $props();
+    let { data }: Props = $props();
 
     const renderer: Partial<Renderer> = {
+        heading({ depth, text }) {
+            return `<h${depth} class="h${depth}">${text}</h${depth}>`;
+        },
         link({ tokens, href }) {
             if (!this.parser) return "";
 
@@ -22,11 +26,38 @@
               </a>
             `;
         },
+        list({ ordered, items }) {
+            if (!this.parser) return "";
+
+            const element = ordered ? "ol" : "ul";
+
+            const classes = ordered ? "list-decimal" : "list-disc";
+
+            const listItems = items
+                .map((listItem) => {
+                    if (!this.parser) return "";
+                    const text = this.parser.parse(listItem.tokens);
+                    return `<li>${text}</li>`;
+                })
+                .join("");
+
+            return `
+            <${element} class="${classes} ml-4">${listItems}</${element}>
+          `;
+        },
+        paragraph({ tokens }) {
+            // Convert line breaks to <br> tags
+            const text = this.parser?.parseInline(tokens);
+            return `<p class="mb-2">${text}</p>`;
+        },
+        br() {
+            return `<p><br/></p>`;
+        },
     };
 
     marked.use({ renderer });
 
-    const content = marked.parse(data.note.content);
+    const content = marked.parse(data.note.content, { breaks: true });
 </script>
 
 <div class="container mx-auto">
@@ -41,7 +72,9 @@
                 </a>
             </header>
 
-            <div class="markdown">
+            <div
+                class="markdown [&>p]:mb-4 [&>p]:text-gray-800 [&>li>p]:mb-2 [&>li>p]:text-current"
+            >
                 {@html content}
             </div>
         </div>
